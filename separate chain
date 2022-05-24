@@ -1,0 +1,197 @@
+#include <iostream>
+
+using namespace std;
+
+class dict
+{
+    struct node
+    {
+        int key;
+        char desc[10];
+        node *next;
+
+    }*ht[10];
+
+public:
+    dict()
+    {
+        for (int i=0;i<10;i++)
+        {
+            ht[i]=NULL;
+        }
+    }
+
+    void create()
+    {
+        node *temp;
+        char ans='y';
+        int loc;
+
+        while(ans=='y')
+        {
+            temp= new node;
+            cout<<"Enter number: ";
+            cin>>temp->key;
+            cout<<"Enter value: ";
+            cin>>temp->desc;
+            temp->next=NULL;
+
+            loc=temp->key%10;
+
+            if(ht[loc]==NULL)
+                {
+                    ht[loc]=temp;
+                }
+            else
+                {
+                    node *t;
+                    t=ht[loc];
+                    while(t->next!=NULL)
+                        {
+                            t=t->next;
+                        }
+                    t->next=temp;
+                }
+            cout<<"Do you want to continue?(y/n): ";
+            cin>>ans;
+            cout<<"\n";
+        }
+
+    }
+
+    void dis()
+    {
+        node *t;
+        for (int i=0;i<10;i++)
+        {
+            if(ht[i]==NULL)
+                cout<<"Index"<<"("<<i<<")"<<"= NULL"<<"\n";
+            else
+            {
+                t=ht[i];
+                cout<<"Index"<<"("<<i<<")";
+                //if(t->next==NULL)
+                    //cout<<" "<< t->key<<":"<<t->desc<<"->";
+                //else
+                    //cout<<" "<<t->key<<":"<<t->desc<<"->";
+
+                while(t!=NULL)
+                {
+                    cout<<" "<<t->key<<":"<<t->desc<<"->";
+                    t=t->next;
+                }
+                cout<<"NULL \n";
+            }
+        }
+
+    }
+
+    void search_num()
+    {
+        node *t;
+        int num,loc,flag=0;
+
+        cout<<"Enter number to be searched: ";
+        cin>>num;
+        loc=num%10;
+        t=ht[loc];
+
+        if(ht[loc]==NULL)
+            cout<<"Number not found \n";
+
+        else
+        {
+
+                while(t!=NULL)
+                {
+                    if(t->key==num)
+                        {
+                            cout<<"Number "<<t->key<<":"<<t->desc<<" found at index"<<"("<<loc<<")"<<"\n";
+                            flag=1;
+                            break;
+                        }
+                    else
+                        t=t->next;
+                }
+                if(flag==0)
+                    cout<<"Number not found!!!"<<"\n";
+        }
+    }
+
+    void delete_num()
+    {
+        node *t,*prev;
+        int num,loc,flag=0;
+        cout<<"Enter number to be deleted: ";
+        cin>>num;
+        loc=num%10;
+        t=ht[loc];
+        prev=t;
+
+        if(t->key==num)
+        {
+            delete t;
+            t=t->next;
+            ht[loc]=t;
+            flag=1;
+            cout<<"Number deleted successfully! \n";
+        }
+
+        else
+        {
+            t=t->next;
+            while(t!=NULL)
+            {
+                if(t->key==num)
+                    {
+                        delete t;
+                        prev->next=t->next;
+                        flag=1;
+                        cout<<"Number deleted successfully!"<<"\n";
+                    }
+                else
+                    {
+                        t=t->next;
+                        prev=prev->next;
+                    }
+            }
+            if(flag==0)
+                cout<<"Number your are trying to enter is not present in the hash table! \n";
+        }
+    }
+
+};
+
+int main()
+{
+    dict obj;
+    int choice;
+    char ans='y';
+
+    while(ans=='y')
+    {
+        cout<<"MAIN MENU:-";
+        cout<<"\n 1)Insert number"<<"\n 2)Display"<<"\n 3)Search"<<"\n 4)Delete \n \n";
+        cout<<"Enter your choice: ";
+        cin>>choice;
+
+        switch(choice)
+        {
+        case 1:
+            obj.create();
+            break;
+        case 2:
+            obj.dis();
+            break;
+        case 3:
+            obj.search_num();
+            break;
+        case 4:
+            obj.delete_num();
+        }
+        cout<<"Do you want to enter the main menu again?(y/n): ";
+        cin>>ans;
+        cout<<"\n";
+    }
+    return 0;
+}
